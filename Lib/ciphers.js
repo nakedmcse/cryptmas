@@ -1,6 +1,30 @@
 // Ciphers library
 export class Ciphers {
     static alpha = "abcdefghijklmnopqrstuvwxyz";
+    static words = {};
+    static dictionaryUrl = 'https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_dictionary.json';
+
+    static* permute(str, prefix = "") {
+        if (str.length === 0) {
+            yield prefix;
+            return;
+        }
+        for (let i = 0; i < str.length; i++) {
+            yield* permute(
+                str.slice(0, i) + str.slice(i + 1),
+                prefix + str[i]
+            );
+        }
+    }
+
+    static async checkDictionaryWord(str) {
+        if (!Ciphers.words["the"]) {
+            await fetch(Ciphers.dictionaryUrl)
+                .then(res => res.json())
+                .then(data => this.words = data);
+        }
+        return this.words[str];
+    }
 
     static caeser(text, offset) {
         return [...text].map(c => Ciphers.alpha[(Ciphers.alpha.indexOf(c)+offset+Ciphers.alpha.length) % Ciphers.alpha.length]).join('');
