@@ -1,5 +1,5 @@
 // Ciphers library
-export class Ciphers {
+class Ciphers {
     static alpha = "abcdefghijklmnopqrstuvwxyz";
     static words = {};
     static dictionaryUrl = 'https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_dictionary.json';
@@ -27,9 +27,9 @@ export class Ciphers {
     }
 
     static atbash(text) {
-        const decrypt = Ciphers.alpha.reverse();
+        const decrypt = Ciphers.alpha.split('').reverse().join('');
         return [...text].map(c => {
-            return decrypt[Ciphers.alpha.indexOf(c)]
+            return Ciphers.alpha[decrypt.indexOf(c)]
         }).join('');
     }
 
@@ -157,6 +157,7 @@ export class Ciphers {
         const decrypt = Ciphers.alpha.split('')
             .map((x,idx) => Ciphers.alpha[(a*idx+b)%26]).join('');
         return text.split('')
-            .map(x => alpha[decrypt.indexOf(x)]).join('');
+            .map(x => Ciphers.alpha[decrypt.indexOf(x)]).join('');
     }
 }
+module.exports = Ciphers;
