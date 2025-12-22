@@ -26,6 +26,13 @@ export class Ciphers {
         return this.words[str];
     }
 
+    static atbash(text) {
+        const decrypt = Ciphers.alpha.reverse();
+        return [...text].map(c => {
+            return decrypt[Ciphers.alpha.indexOf(c)]
+        }).join('');
+    }
+
     static caeser(text, offset) {
         return [...text].map(c => Ciphers.alpha[(Ciphers.alpha.indexOf(c)+offset+Ciphers.alpha.length) % Ciphers.alpha.length]).join('');
     }
