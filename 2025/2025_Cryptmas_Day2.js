@@ -27,6 +27,14 @@ function iterateMappings(plain, callback) {
     recurse(0);
 }
 
+function atbash(text) {
+    const alpha = "abcdefghijklmnopqrstuvwxyz";
+    const decrypt = alpha.split('').reverse().join('');
+    return [...text].map(c => {
+        return alpha[decrypt.indexOf(c)]
+    }).join('');
+}
+
 // Replacement cypher - try random mappings of just the characters in the cyphertext, check for output as a dictionary word
 const url = 'https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_dictionary.json'
 fetch(url)
@@ -47,5 +55,6 @@ fetch(url)
             }
             return false;
         });
+        console.log(atbash(cypherText));
         console.timeEnd("Decrypt");
     })
