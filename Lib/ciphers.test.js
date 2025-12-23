@@ -54,4 +54,10 @@ describe("Tools", () => {
         expect(await Ciphers.checkDictionaryWord("xyzzy")).toBeFalsy();
         expect(await Ciphers.checkDictionaryWord("the")).toBeTruthy();
     })
+
+    test("HammingDistance", () => {
+        expect(Ciphers.hammingDistance(0,1)).toBe(1);
+        expect(Ciphers.hammingDistance(0,255)).toBe(8);
+        expect(Ciphers.hammingDistance(0,65535)).toBe(16);
+    })
 })

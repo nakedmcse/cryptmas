@@ -4,6 +4,7 @@ class Ciphers {
     static words = {};
     static dictionaryUrl = 'https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_dictionary.json';
 
+    // Tools
     static* permute(str, prefix = "") {
         if (str.length === 0) {
             yield prefix;
@@ -26,6 +27,12 @@ class Ciphers {
         return this.words[str];
     }
 
+    static hammingDistance(a, b) {
+        return (a ^ b).toString(2).split('')
+            .filter(c => c === '1').length;
+    }
+
+    // Ciphers
     static atbash(text) {
         const decrypt = Ciphers.alpha.split('').reverse().join('');
         return [...text].map(c => {
