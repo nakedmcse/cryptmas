@@ -10,7 +10,7 @@ class Ciphers {
             return;
         }
         for (let i = 0; i < str.length; i++) {
-            yield* permute(
+            yield* this.permute(
                 str.slice(0, i) + str.slice(i + 1),
                 prefix + str[i]
             );
