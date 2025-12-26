@@ -35,12 +35,17 @@ function decodeASCII85(text) {
         }
     }
 
-    // Handle any remaining partial
+    // Handle partial final group
     if (tuple.length > 0) {
-        for (let i = tuple.length; i < 5; i++) tuple.push(84);
-        value = tuple.reduce((a, b) => a * 85 + b, 0);
-        for (let i = 0; i < tuple.length - 1; i++) {
-            out.push((value >>> (24 - 8 * i)) & 0xFF);
+        const origLen = tuple.length;
+        if (origLen === 1) throw new Error("Invalid final ASCII85 group length 1");
+
+        while (tuple.length < 5) tuple.push(84); // 'u' padding
+        const value = tuple.reduce((a, b) => a * 85 + b, 0) >>> 0;
+
+        // emit only origLen - 1 bytes
+        for (let i = 0; i < origLen - 1; i++) {
+            out.push((value >>> (24 - 8 * i)) & 0xff);
         }
     }
 
@@ -48,4 +53,4 @@ function decodeASCII85(text) {
 }
 
 // Atbash conversion
-console.log(`Christmas Message: ${Ciphers.atbash(decodeASCII85(cypherText))}`);
+console.log(`Christmas Message: ${decodeASCII85(cypherText).split(' ').map(s => Ciphers.atbash(s)).join(' ')}`);
