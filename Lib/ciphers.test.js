@@ -60,4 +60,9 @@ describe("Tools", () => {
         expect(Ciphers.hammingDistance(0,255)).toBe(8);
         expect(Ciphers.hammingDistance(0,65535)).toBe(16);
     })
+
+    test("DecodeASCII85", () => {
+        expect(Ciphers.decodeASCII85("<~FCfN8+EV1>F8~>"))
+            .toBe("test text");
+    })
 })
