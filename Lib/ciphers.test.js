@@ -65,4 +65,26 @@ describe("Tools", () => {
         expect(Ciphers.decodeASCII85("<~FCfN8+EV1>F8~>"))
             .toBe("test text");
     })
+
+    test("HexToBytes", () => {
+        const bytes = Ciphers.hexToBytes("baadf00d");
+        expect(bytes[0]).toBe(0xba);
+        expect(bytes[1]).toBe(0xad);
+        expect(bytes[2]).toBe(0xf0);
+        expect(bytes[3]).toBe(0x0d);
+    })
+
+    test("BytesToHex", () => {
+        const bytes = new Uint8Array([0xba,0xad,0xf0,0x0d]);
+        expect(Ciphers.bytesToHex(bytes)).toBe("baadf00d");
+        expect(Ciphers.bytesToHex(bytes,3)).toBe("baadf0");
+    })
+
+    test("Pad", () => {
+        const bytes = new Uint8Array([0xba,0xad,0xf0,0x0d]);
+        const padded = Ciphers.pad(bytes, 6, 0x3a);
+        expect(padded[3]).toBe(0x0d);
+        expect(padded[4]).toBe(0x3a);
+        expect(padded[5]).toBe(0x3a);
+    })
 })

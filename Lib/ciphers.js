@@ -32,6 +32,21 @@ class Ciphers {
             .filter(c => c === '1').length;
     }
 
+    static hexToBytes(hex) {
+        return new Uint8Array([...hex.matchAll(/../g)].map(m => parseInt(m[0], 16)))
+    }
+
+    static bytesToHex(bytes, max = bytes.length) {
+        return [...bytes.slice(0, max)].map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    static pad(original, total, value) {
+        const retval = new Uint8Array(total);
+        retval.set(original, 0);
+        retval.fill(value, original.length);
+        return retval;
+    }
+
     static decodeASCII85(text) {
         text = text.replaceAll("<~","").replaceAll("~>","");
         let out = [];
