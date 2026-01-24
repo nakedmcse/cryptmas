@@ -1,6 +1,25 @@
 # Cryptmas
 Cryptmas Cryptography Challenge Code
 
+## Library
+This contains a library of the cipher functions, along with tests showing examples of use.
+### Javascript
+```js
+import Ciphers from '../Lib/ciphers.js';
+```
+Cipher functions are then available using the `Ciphers` object.
+
+Examples of use can be found in the `ciphers.test.js` file.
+### C
+```c++
+#define CIPHERS_STB_IMPLEMENTATION
+#include "ciphers-stb.h"
+```
+This is a single file STB type library.  You define the implementation where you want 
+to use it and simply include the single `ciphers-stb.h` file.
+
+Examples of use can be found in the `ciphers-stb-test.c` file.
+
 ## 2025
 ### Day 1
 ROT13 - Special case of the caeser cipher,

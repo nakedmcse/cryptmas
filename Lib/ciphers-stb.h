@@ -19,7 +19,7 @@ char *xor(const char *text, const char *key);
 char *affine(const char *text, int a, int b);
 #define CIPHERS_STB_H
 
-#ifndef CIPHERS_STB_IMPLEMENTATION
+#ifdef CIPHERS_STB_IMPLEMENTATION
 const char *alpha = "abcdefghijklmnopqrstuvwxyz";
 
 unsigned char *hexToBytes(const char *hex) {

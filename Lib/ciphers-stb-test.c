@@ -1,6 +1,7 @@
 // Tests for Ciphers STB Lib
 #include <stdio.h>
 #include <assert.h>
+#define CIPHERS_STB_IMPLEMENTATION
 #include "ciphers-stb.h"
 
 void test_hexToBytes(void) {
