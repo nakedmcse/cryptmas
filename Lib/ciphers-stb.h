@@ -2,6 +2,10 @@
 #ifndef CIPHERS_STB_H
 #include <stdlib.h>
 #include <string.h>
+typedef struct columnIdx {
+    int originalIndex;
+    char letter;
+} columnIdx;
 
 unsigned char *hexToBytes(const char *hex);
 char *atBash(const char *text);
@@ -112,13 +116,84 @@ char *vigenereAutokey(const char *text, const char *key) {
 }
 
 char *railfence(const char *text, int offset) {
-    //TODO: Implement
-    return NULL;
+    size_t len = strlen(text);
+    char *retval = malloc(len + 1);
+    if (retval == NULL) {
+        return NULL;
+    }
+
+    char pattern[len];
+    memset(pattern, '\0', len);
+    char rail = 0;
+    char dir = 1;
+    for (int i = 0; i < len; i++) {
+        pattern[i] = rail;
+        rail += dir;
+        if (rail == 0 || rail == (char)offset - 1) dir *= -1;
+    }
+    int railCounts[offset];
+    memset(railCounts, 0, sizeof(railCounts));
+    for (int i = 0; i < len; i++) railCounts[pattern[i]]++;
+
+    char rails[offset][len];
+    memset(rails, 0, sizeof(rails));
+    int idx = 0;
+    for (int r = 0; r < offset; r++) {
+        strncpy(&rails[r][0],text + idx,railCounts[r]);
+        idx += railCounts[r];
+    }
+
+    int railPos[offset];
+    memset(railPos, 0, sizeof(railPos));
+    for (int i = 0; i < len; i++) {
+        char r = pattern[i];
+        retval[i] = rails[r][railPos[r]++];
+    }
+    return retval;
+}
+
+int columnIdxComparator(const void *a, const void *b) {
+    columnIdx *aIdx = (columnIdx *) a;
+    columnIdx *bIdx = (columnIdx *) b;
+    return aIdx->letter - bIdx->letter;
 }
 
 char *column(const char *text, const char *key) {
-    //TODO: Implement
-    return NULL;
+    size_t len = strlen(text);
+    int columns = (int)strlen(key);
+    char *retval = malloc(len + 1);
+    if (retval == NULL) {
+        return NULL;
+    }
+    memset(retval, '\0', len);
+    char colData[columns][len];
+    memset(colData, 0, sizeof(colData));
+    int rows = (int)len / columns;
+    if ((int)len % columns != 0) rows++;
+
+    columnIdx indexes[columns];
+    for (int i = 0; i < columns; i++) {
+        indexes[i].originalIndex = i;
+        indexes[i].letter = key[i];
+    }
+    qsort(indexes, rows, sizeof(indexes[0]), columnIdxComparator);
+
+    for (int i = 0; i < columns; i++) {
+        strncpy(&colData[indexes[i].originalIndex][0],text + (i*rows), rows);
+    }
+
+    int rIdx = 0;
+    for (int r = 0; r < rows; r++) {
+       for (int c = 0; c < columns; c++) {
+           retval[rIdx++] = colData[c][r];
+       }
+    }
+    size_t i, j;
+    for (i=0, j=0; i < strlen(retval); i++) {
+        if (retval[i] != 'x') retval[j++] = retval[i];
+    }
+    retval[j] = '\0';
+    return retval;
 }
 
 char *playfair(const char *text, const char *key) {

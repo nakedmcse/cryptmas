@@ -32,6 +32,16 @@ void test_vigenereAutokey(void) {
     printf("vigenereAutokey test passed\n");
 }
 
+void test_railfence(void) {
+    assert(strncmp(railfence("sdtnwrfoi", 3),"snowdrift",9) == 0);
+    printf("railfence test passed\n");
+}
+
+void test_column(void) {
+    assert(strncmp(column("aexnrxltn","ice"),"lantern",7) == 0);
+    printf("column test passed\n");
+}
+
 void test_playfair(void) {
     assert(strncmp(playfair("zswnhkdnhzhz", "winter"),"sleighbelxlx", 12) == 0);
     printf("playfair test passed\n");
@@ -53,6 +63,8 @@ int main(void) {
     test_caeser();
     test_vigenere();
     test_vigenereAutokey();
+    test_railfence();
+    test_column();
     test_playfair();
     test_xor();
     test_affine();
