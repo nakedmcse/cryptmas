@@ -122,8 +122,58 @@ char *column(const char *text, const char *key) {
 }
 
 char *playfair(const char *text, const char *key) {
-    //TODO: Implement
-    return NULL;
+    const char *alphabet = "abcdefghiklmnopqrstuvwxyz";
+    char *retval = malloc(strlen(text) + 1);
+    if (retval == NULL) {
+        return NULL;
+    }
+    if (strlen(text) % 2 != 0) {
+        char append[2] = {'x','\0'};
+        strncat(retval, append, 1);
+    }
+    char grid[25];
+    memset(grid, '\0', 25);
+    int aptr = 0;
+    size_t keyLen = strlen(key);
+    for (int i = 0; i < 25; i++) {
+        if (i < keyLen) {
+            grid[i] = key[i];
+            continue;
+        }
+        char src[2] = {alphabet[aptr], '\0'};
+        while (strstr(key, src) != NULL) {
+            aptr++;
+            src[0] = alphabet[aptr];
+        }
+        grid[i] = alphabet[aptr++];
+    }
+    int ridx = 0;
+    for (int i = 0; i < strlen(text); i += 2) {
+        char src[2] = {text[i], '\0'};
+        int i0 = (int)(strstr(grid, src) - grid);
+        src[0] = text[i+1];
+        int i1 = (int)(strstr(grid, src) - grid);
+        int r0 = i0/5; int r1 = i1/5;
+        int c0 = i0%5; int c1 = i1%5;
+        int t0 = 0; int t1 = 0;
+        if (r0 == r1) {
+            t0 = (i0 - 1) < r0 * 5 ? 4*(r0+1) : i0 - 1;
+            t1 = (i1 - 1) < r1 * 5 ? 4*(r1+1) : i1 - 1;
+        }
+        else if (c0 == c1) {
+            t0 = (i0 - 5) < 0 ? 24 + (i0 - 5) : i0 - 5;
+            t1 = (i1 - 5) < 0 ? 24 + (i1 - 5) : i1 - 5;
+        }
+        else {
+            int tmp = c0;
+            c0 = c1; c1 = tmp;
+            t0 = (r0 * 5) + c0;
+            t1 = (r1 * 5) + c1;
+        }
+        retval[ridx++] = grid[t0];
+        retval[ridx++] = grid[t1];
+    }
+    return retval;
 }
 
 char *xor(const char *text, const char *key) {

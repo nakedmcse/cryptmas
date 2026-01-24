@@ -32,6 +32,11 @@ void test_vigenereAutokey(void) {
     printf("vigenereAutokey test passed\n");
 }
 
+void test_playfair(void) {
+    assert(strncmp(playfair("zswnhkdnhzhz", "winter"),"sleighbelxlx", 12) == 0);
+    printf("playfair test passed\n");
+}
+
 void test_xor(void) {
     assert(strncmp(xor((const char *)hexToBytes("1b01031f170d161c1d0a"),"sno"),"hollyberry", 10) == 0);
     printf("xor test passed\n");
@@ -48,6 +53,7 @@ int main(void) {
     test_caeser();
     test_vigenere();
     test_vigenereAutokey();
+    test_playfair();
     test_xor();
     test_affine();
     return 0;
