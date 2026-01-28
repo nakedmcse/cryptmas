@@ -1,6 +1,7 @@
 // Tests for Ciphers STB Lib
 #include <stdio.h>
 #include <assert.h>
+#include <stdbool.h>
 #define CIPHERS_STB_IMPLEMENTATION
 #include "ciphers-stb.h"
 
@@ -14,22 +15,26 @@ void test_hexToBytes(void) {
 
 void test_atBash(void) {
     assert(strncmp(atBash("vevitivvm"),"evergreen",9) == 0);
+    assert(strncmp(atBash("evergreen"),"vevitivvm",9) == 0);
     printf("atBash test passed\n");
 }
 
 void test_caeser(void) {
-    assert(strncmp(caeser("zahyspnoa", 19), "starlight", 9) == 0);
-    assert(strncmp(caeser("fabjsnyy", 13), "snowfall", 8) == 0);
+    assert(strncmp(caeser("zahyspnoa", 19, false), "starlight", 9) == 0);
+    assert(strncmp(caeser("starlight", 19, true), "zahyspnoa", 9) == 0);
+    assert(strncmp(caeser("fabjsnyy", 13, false), "snowfall", 8) == 0);
     printf("caeser test passed\n");
 }
 
 void test_vigenere(void) {
-    assert(strncmp(vigenere("xvfakvra", "snow"), "fireside", 8) == 0);
+    assert(strncmp(vigenere("xvfakvra", "snow", false), "fireside", 8) == 0);
+    assert(strncmp(vigenere("fireside", "snow", true), "xvfakvra", 8) == 0);
     printf("vigenere test passed\n");
 }
 
 void test_vigenereAutokey(void) {
-    assert(strncmp(vigenereAutokey("apwytga","snow"),"icicles", 7) == 0);
+    assert(strncmp(vigenereAutokey("apwytga","snow", false),"icicles", 7) == 0);
+    assert(strncmp(vigenereAutokey("icicles","snow", true),"apwytga", 7) == 0);
     printf("vigenereAutokey test passed\n");
 }
 

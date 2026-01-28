@@ -2,6 +2,8 @@
 #ifndef CIPHERS_STB_H
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
 typedef struct columnIdx {
     int originalIndex;
     char letter;
@@ -9,9 +11,9 @@ typedef struct columnIdx {
 
 unsigned char *hexToBytes(const char *hex);
 char *atBash(const char *text);
-char *caeser(const char *text, int offset);
-char *vigenere(const char *text, const char *key);
-char *vigenereAutokey(const char *text, const char *key);
+char *caeser(const char *text, int offset, bool encrypt);
+char *vigenere(const char *text, const char *key, bool encrypt);
+char *vigenereAutokey(const char *text, const char *key, bool encrypt);
 char *railfence(const char *text, int offset);
 char *column(const char *text, const char *key);
 char *playfair(const char *text, const char *key);
@@ -54,11 +56,12 @@ char *atBash(const char *text) {
     return retval;
 }
 
-char *caeser(const char *text, int offset) {
+char *caeser(const char *text, int offset, bool encrypt) {
     char *retval = malloc(strlen(text) + 1);
     if (retval == NULL) {
         return NULL;
     }
+    if (encrypt) offset *= -1;
     int alphaLen = (int)strlen(alpha);
     for (int i = 0; i < strlen(text); i++) {
         char src[2];
@@ -70,7 +73,7 @@ char *caeser(const char *text, int offset) {
     return retval;
 }
 
-char *vigenere(const char *text, const char *key) {
+char *vigenere(const char *text, const char *key, bool encrypt) {
     char *retval = malloc(strlen(text) + 1);
     if (retval == NULL) {
         return NULL;
@@ -81,7 +84,7 @@ char *vigenere(const char *text, const char *key) {
         src[0] = key[i % keyLen]; src[1] = '\0';
         int idx = (int)(strstr(alpha, src) - alpha);
         src[0] = text[i];
-        char *trans = caeser(src, 0-idx);
+        char *trans = caeser(src, 0-idx, encrypt);
         retval[i] = trans[0];
         free(trans);
     }
@@ -89,7 +92,7 @@ char *vigenere(const char *text, const char *key) {
     return retval;
 }
 
-char *vigenereAutokey(const char *text, const char *key) {
+char *vigenereAutokey(const char *text, const char *key, bool encrypt) {
     char *retval = malloc(strlen(text) + 1);
     if (retval == NULL) {
         return NULL;
@@ -105,9 +108,9 @@ char *vigenereAutokey(const char *text, const char *key) {
         src[0] = autoKey[i]; src[1] = '\0';
         int idx = (int)(strstr(alpha, src) - alpha);
         src[0] = text[i];
-        char *trans = caeser(src, 0-idx);
+        char *trans = caeser(src, 0-idx, encrypt);
         retval[i] = trans[0];
-        autoKey[i + (int)keyLen] = trans[0];
+        autoKey[i + (int)keyLen] = encrypt ? text[i] : trans[0];
         free(trans);
     }
     free(autoKey);
