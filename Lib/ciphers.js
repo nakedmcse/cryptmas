@@ -104,24 +104,25 @@ class Ciphers {
         }).join('');
     }
 
-    static caeser(text, offset) {
+    static caeser(text, offset, encrypt) {
+        if (encrypt) offset *= -1;
         return [...text].map(c => Ciphers.alpha[(Ciphers.alpha.indexOf(c)+offset+Ciphers.alpha.length) % Ciphers.alpha.length]).join('');
     }
 
-    static vigenere(text, key) {
+    static vigenere(text, key, encrypt) {
         const caeserCypher = (c,o) => Ciphers.alpha[(Ciphers.alpha.indexOf(c)+o+Ciphers.alpha.length) % Ciphers.alpha.length];
 
         return [...text].map((c, i) => {
-            return caeserCypher(c, 0 - Ciphers.alpha.indexOf(key[i % key.length]))
+            return caeserCypher(c, encrypt ? Ciphers.alpha.indexOf(key[i % key.length]) : 0 - Ciphers.alpha.indexOf(key[i % key.length]))
         }).join('');
     }
 
-    static vigenereAutoKey(text, key) {
+    static vigenereAutoKey(text, key, encrypt) {
         let result = "";
         for (let i = 0; i < text.length; i++) {
-            const next = Ciphers.alpha[(Ciphers.alpha.indexOf(text[i]) - Ciphers.alpha.indexOf(key[i]) + 26) % 26];
+            const next = Ciphers.alpha[(Ciphers.alpha.indexOf(text[i]) - (encrypt ? 0-Ciphers.alpha.indexOf(key[i]) : Ciphers.alpha.indexOf(key[i])) + 26) % 26];
             result += next;
-            key += next;
+            key += encrypt ? text[i] : next;
         }
         return result;
     }

@@ -2,23 +2,28 @@ const Ciphers = require("./ciphers.js");
 
 describe("Ciphers", () => {
     test("ROT13", () => {
-        expect(Ciphers.caeser("fabjsnyy", 13)).toBe("snowfall");
+        expect(Ciphers.caeser("fabjsnyy", 13, false)).toBe("snowfall");
+        expect(Ciphers.caeser("snowfall", 13, true)).toBe("fabjsnyy");
     });
 
     test("Atbash", () => {
         expect(Ciphers.atbash("vevitivvm")).toBe("evergreen");
+        expect(Ciphers.atbash("evergreen")).toBe("vevitivvm");
     })
 
     test("Caeser", () => {
-        expect(Ciphers.caeser("zahyspnoa", 19)).toBe("starlight");
+        expect(Ciphers.caeser("zahyspnoa", 19, false)).toBe("starlight");
+        expect(Ciphers.caeser("starlight", 19, true)).toBe("zahyspnoa");
     })
 
     test("Vigenere", () => {
-        expect(Ciphers.vigenere("xvfakvra", "snow")).toBe("fireside");
+        expect(Ciphers.vigenere("xvfakvra", "snow", false)).toBe("fireside");
+        expect(Ciphers.vigenere("fireside", "snow", true)).toBe("xvfakvra");
     })
 
     test("VigenereAutokey", () => {
-        expect(Ciphers.vigenereAutoKey("apwytga","snow")).toBe("icicles");
+        expect(Ciphers.vigenereAutoKey("apwytga","snow", false)).toBe("icicles");
+        expect(Ciphers.vigenereAutoKey("icicles","snow", true)).toBe("apwytga");
     })
 
     test("Railfence", () => {
