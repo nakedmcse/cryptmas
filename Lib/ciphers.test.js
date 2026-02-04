@@ -43,7 +43,8 @@ describe("Ciphers", () => {
     })
 
     test("Affine", () => {
-        expect(Ciphers.affine("pcwvxccp", 5, 8)).toBe("reindeer");
+        expect(Ciphers.affine("pcwvxccp", 5, 8, false)).toBe("reindeer");
+        expect(Ciphers.affine("reindeer", 5, 8, true)).toBe("pcwvxccp");
     })
 })
 

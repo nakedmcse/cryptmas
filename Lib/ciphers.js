@@ -225,9 +225,10 @@ class Ciphers {
         }).join('');
     }
 
-    static affine(text, a, b) {
+    static affine(text, a, b, encrypt) {
         const decrypt = Ciphers.alpha.split('')
             .map((x,idx) => Ciphers.alpha[(a*idx+b)%26]).join('');
+        if (encrypt) return text.split('').map(x => decrypt[Ciphers.alpha.indexOf(x)]).join('');
         return text.split('')
             .map(x => Ciphers.alpha[decrypt.indexOf(x)]).join('');
     }
