@@ -18,7 +18,7 @@ char *railfence(const char *text, int offset);
 char *column(const char *text, const char *key);
 char *playfair(const char *text, const char *key);
 char *xor(const char *text, const char *key);
-char *affine(const char *text, int a, int b);
+char *affine(const char *text, int a, int b, bool encrypt);
 #define CIPHERS_STB_H
 
 #ifdef CIPHERS_STB_IMPLEMENTATION
@@ -267,7 +267,7 @@ char *xor(const char *text, const char *key) {
     return retval;
 }
 
-char *affine(const char *text, int a, int b) {
+char *affine(const char *text, int a, int b, bool encrypt) {
     char *retval = malloc(strlen(text) + 1);
     if (retval == NULL) {
         return NULL;
@@ -283,8 +283,8 @@ char *affine(const char *text, int a, int b) {
     for (int i = 0; i < strlen(text); i++) {
         char src[2];
         src[0] = text[i]; src[1] = '\0';
-        int idx = (int)(strstr(decrypt, src) - decrypt);
-        retval[i] = alpha[idx];
+        int idx = encrypt ? (int)(strstr(alpha, src) - alpha) : (int)(strstr(decrypt, src) - decrypt);
+        retval[i] = encrypt ? decrypt[idx] : alpha[idx];
     }
     free(decrypt);
     retval[strlen(text)] = '\0';

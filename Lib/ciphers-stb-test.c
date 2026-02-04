@@ -59,7 +59,8 @@ void test_xor(void) {
 }
 
 void test_affine(void) {
-    assert(strncmp(affine("pcwvxccp", 5, 8),"reindeer",8) == 0);
+    assert(strncmp(affine("pcwvxccp", 5, 8, false),"reindeer",8) == 0);
+    assert(strncmp(affine("reindeer", 5, 8, true),"pcwvxccp",8) == 0);
     printf("affine test passed\n");
 }
 
