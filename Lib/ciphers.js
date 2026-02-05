@@ -174,7 +174,7 @@ class Ciphers {
         return result.replaceAll('x','');
     }
 
-    static playfair(text, key) {
+    static playfair(text, key, encrypt) {
         const alphabet = "abcdefghiklmnopqrstuvwxyz";
         let result = "";
 
@@ -197,12 +197,24 @@ class Ciphers {
             let t0, t1;
 
             if (r0 === r1) {
-                t0 = (i0 - 1) < r0 * 5 ? 4*(r0+1) : i0 - 1;
-                t1 = (i1 - 1) < r1 * 5 ? 4*(r1+1) : i1 - 1;
+                if (encrypt) {
+                    t0 = (i0 + 1) > 5*(r0+1)-1 ? 5*r0 : i0 + 1;
+                    t1 = (i1 + 1) > 5*(r1+1)-1 ? 5*r1 : i1 + 1;
+                }
+                else {
+                    t0 = (i0 - 1) < r0 * 5 ? 4*(r0+1) : i0 - 1;
+                    t1 = (i1 - 1) < r1 * 5 ? 4*(r1+1) : i1 - 1;
+                }
             }
             else if (c0 === c1) {
-                t0 = (i0 - 5) < 0 ? 24 + (i0 - 5) : i0 - 5;
-                t1 = (i1 - 5) < 0 ? 24 + (i1 - 5) : i1 - 5;
+                if (encrypt) {
+                    t0 = (i0 + 5) % 25;
+                    t1 = (i1 + 5) % 25;
+                }
+                else {
+                    t0 = (i0 - 5) < 0 ? 24 + (i0 - 5) : i0 - 5;
+                    t1 = (i1 - 5) < 0 ? 24 + (i1 - 5) : i1 - 5;
+                }
             }
             else {
                 const tmp = c0;

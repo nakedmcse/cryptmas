@@ -35,7 +35,8 @@ describe("Ciphers", () => {
     })
 
     test("Playfair", () => {
-        expect(Ciphers.playfair("ZSWNHKDNHZHZ".toLowerCase(), "winter")).toBe("sleighbelxlx");
+        expect(Ciphers.playfair("ZSWNHKDNHZHZ".toLowerCase(), "winter", false)).toBe("sleighbelxlx");
+        expect(Ciphers.playfair("sleighbelxlx", "winter", true)).toBe("ZSWNHKDNHZHZ".toLowerCase());
     })
 
     test("XOR", () => {
