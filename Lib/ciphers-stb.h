@@ -16,7 +16,7 @@ char *vigenere(const char *text, const char *key, bool encrypt);
 char *vigenereAutokey(const char *text, const char *key, bool encrypt);
 char *railfence(const char *text, int offset);
 char *column(const char *text, const char *key);
-char *playfair(const char *text, const char *key);
+char *playfair(const char *text, const char *key, bool encrypt);
 char *xor(const char *text, const char *key);
 char *affine(const char *text, int a, int b, bool encrypt);
 #define CIPHERS_STB_H
@@ -199,7 +199,7 @@ char *column(const char *text, const char *key) {
     return retval;
 }
 
-char *playfair(const char *text, const char *key) {
+char *playfair(const char *text, const char *key, bool encrypt) {
     const char *alphabet = "abcdefghiklmnopqrstuvwxyz";
     char *retval = malloc(strlen(text) + 1);
     if (retval == NULL) {
@@ -235,12 +235,24 @@ char *playfair(const char *text, const char *key) {
         int c0 = i0%5; int c1 = i1%5;
         int t0 = 0; int t1 = 0;
         if (r0 == r1) {
-            t0 = (i0 - 1) < r0 * 5 ? 4*(r0+1) : i0 - 1;
-            t1 = (i1 - 1) < r1 * 5 ? 4*(r1+1) : i1 - 1;
+            if (encrypt) {
+                t0 = (i0 + 1) > 5*(r0+1)-1 ? 5*r0 : i0 + 1;
+                t1 = (i1 + 1) > 5*(r1+1)-1 ? 5*r1 : i1 + 1;
+            } else {
+                t0 = (i0 - 1) < r0 * 5 ? 4*(r0+1) : i0 - 1;
+                t1 = (i1 - 1) < r1 * 5 ? 4*(r1+1) : i1 - 1;
+            }
+
         }
         else if (c0 == c1) {
-            t0 = (i0 - 5) < 0 ? 24 + (i0 - 5) : i0 - 5;
-            t1 = (i1 - 5) < 0 ? 24 + (i1 - 5) : i1 - 5;
+            if (encrypt) {
+                t0 = (i0 + 5) % 25;
+                t1 = (i1 + 5) % 25;
+            } else {
+                t0 = (i0 - 5) < 0 ? 24 + (i0 - 5) : i0 - 5;
+                t1 = (i1 - 5) < 0 ? 24 + (i1 - 5) : i1 - 5;
+            }
+
         }
         else {
             int tmp = c0;

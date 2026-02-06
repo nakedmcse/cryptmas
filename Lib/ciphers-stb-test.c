@@ -49,7 +49,8 @@ void test_column(void) {
 }
 
 void test_playfair(void) {
-    assert(strncmp(playfair("zswnhkdnhzhz", "winter"),"sleighbelxlx", 12) == 0);
+    assert(strncmp(playfair("zswnhkdnhzhz", "winter", false),"sleighbelxlx", 12) == 0);
+    assert(strncmp(playfair("sleighbelxlx", "winter", true),"zswnhkdnhzhz", 12) == 0);
     printf("playfair test passed\n");
 }
 
