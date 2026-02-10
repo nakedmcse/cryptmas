@@ -15,7 +15,7 @@ char *caeser(const char *text, int offset, bool encrypt);
 char *vigenere(const char *text, const char *key, bool encrypt);
 char *vigenereAutokey(const char *text, const char *key, bool encrypt);
 char *railfence(const char *text, int offset);
-char *column(const char *text, const char *key);
+char *column(const char *text, const char *key, bool encrypt);
 char *playfair(const char *text, const char *key, bool encrypt);
 char *xor(const char *text, const char *key);
 char *affine(const char *text, int a, int b, bool encrypt);
@@ -161,7 +161,7 @@ int columnIdxComparator(const void *a, const void *b) {
     return aIdx->letter - bIdx->letter;
 }
 
-char *column(const char *text, const char *key) {
+char *column(const char *text, const char *key, bool encrypt) {
     size_t len = strlen(text);
     int columns = (int)strlen(key);
     char *retval = malloc(len + 1);
@@ -182,20 +182,33 @@ char *column(const char *text, const char *key) {
     qsort(indexes, rows, sizeof(indexes[0]), columnIdxComparator);
 
     for (int i = 0; i < columns; i++) {
-        strncpy(&colData[indexes[i].originalIndex][0],text + (i*rows), rows);
+        if (encrypt) {
+            strncpy(&colData[i][0],text + (i*rows), rows);
+            if (strlen(colData[i]) < rows) {
+                for (size_t j = strlen(colData[i]); j < rows; j++) {
+                    colData[i][j] = 'x';
+                }
+            }
+        } else {
+            strncpy(&colData[indexes[i].originalIndex][0],text + (i*rows), rows);
+        }
     }
 
     int rIdx = 0;
     for (int r = 0; r < rows; r++) {
        for (int c = 0; c < columns; c++) {
-           retval[rIdx++] = colData[c][r];
+           retval[rIdx++] = encrypt ? colData[c][indexes[r].originalIndex] : colData[c][r];
        }
     }
     size_t i, j;
-    for (i=0, j=0; i < strlen(retval); i++) {
-        if (retval[i] != 'x') retval[j++] = retval[i];
+    if (!encrypt) {
+        for (i=0, j=0; i < strlen(retval); i++) {
+            if (retval[i] != 'x') retval[j++] = retval[i];
+        }
+        retval[j] = '\0';
+    } else {
+        retval[rIdx] = '\0';
     }
-    retval[j] = '\0';
     return retval;
 }
 

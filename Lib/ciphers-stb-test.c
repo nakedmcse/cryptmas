@@ -44,7 +44,8 @@ void test_railfence(void) {
 }
 
 void test_column(void) {
-    assert(strncmp(column("aexnrxltn","ice"),"lantern",7) == 0);
+    assert(strncmp(column("aexnrxltn","ice", false),"lantern",7) == 0);
+    assert(strncmp(column("lantern","ice", true),"aexnrxltn",9) == 0);
     printf("column test passed\n");
 }
 
