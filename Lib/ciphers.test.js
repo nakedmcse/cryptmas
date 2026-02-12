@@ -27,11 +27,13 @@ describe("Ciphers", () => {
     })
 
     test("Railfence", () => {
-        expect(Ciphers.railfence("sdtnwrfoi", 3)).toBe("snowdrift");
+        expect(Ciphers.railfence("sdtnwrfoi", 3, false)).toBe("snowdrift");
+        expect(Ciphers.railfence("snowdrift", 3, true)).toBe("sdtnwrfoi");
     })
 
     test("Columnar", () => {
-        expect(Ciphers.column("aexnrxltn","ice")).toBe("lantern");
+        expect(Ciphers.column("aexnrxltn","ice", false)).toBe("lantern");
+        expect(Ciphers.column("lantern","ice", true)).toBe("aexnrxltn");
     })
 
     test("Playfair", () => {

@@ -127,11 +127,21 @@ class Ciphers {
         return result;
     }
 
-    static railfence(text, offset) {
+    static railfence(text, offset, encrypt) {
         const len = text.length;
         const pattern = new Array(len);
         let rail = 0;
         let dir = 1;
+
+        if (encrypt) {
+            const encRails = Array(offset).fill("");
+            for (let i = 0; i < len; i++) {
+                encRails[rail] += text[i];
+                rail += dir;
+                if (rail === 0 || rail === offset - 1) dir *= -1;
+            }
+            return encRails.join('');
+        }
 
         for (let i = 0; i < len; i++) {
             pattern[i] = rail;
@@ -158,7 +168,7 @@ class Ciphers {
         return result;
     }
 
-    static column(text, key) {
+    static column(text, key, encrypt) {
         const columns = key.length;
         const colData = new Array(columns);
         const rows = Math.ceil(text.length / columns);
@@ -166,10 +176,16 @@ class Ciphers {
             .sort((a, b) => a.c.charCodeAt(0) - b.c.charCodeAt(0));
 
         indexes.forEach((o, idx) => {
-            colData[o.i] = text.slice(idx*rows, (idx*rows)+rows).split("");
+            colData[encrypt ? idx : o.i] = text.slice(idx*rows, (idx*rows)+rows).split("");
         });
 
         let result = "";
+
+        if (encrypt) {
+            for (let r = 0; r < rows; r++) result += colData.map(c => c[indexes[r].i] ?? 'x').join('');
+            return result;
+        }
+
         for (let r = 0; r < rows; r++) result += colData.map(c => c[r]).join('');
         return result.replaceAll('x','');
     }
