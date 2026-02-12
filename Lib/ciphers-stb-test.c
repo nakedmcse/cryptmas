@@ -39,7 +39,8 @@ void test_vigenereAutokey(void) {
 }
 
 void test_railfence(void) {
-    assert(strncmp(railfence("sdtnwrfoi", 3),"snowdrift",9) == 0);
+    assert(strncmp(railfence("sdtnwrfoi", 3, false),"snowdrift",9) == 0);
+    assert(strncmp(railfence("snowdrift", 3, true),"sdtnwrfoi",9) == 0);
     printf("railfence test passed\n");
 }
 

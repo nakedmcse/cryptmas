@@ -14,7 +14,7 @@ char *atBash(const char *text);
 char *caeser(const char *text, int offset, bool encrypt);
 char *vigenere(const char *text, const char *key, bool encrypt);
 char *vigenereAutokey(const char *text, const char *key, bool encrypt);
-char *railfence(const char *text, int offset);
+char *railfence(const char *text, int offset, bool encrypt);
 char *column(const char *text, const char *key, bool encrypt);
 char *playfair(const char *text, const char *key, bool encrypt);
 char *xor(const char *text, const char *key);
@@ -118,11 +118,26 @@ char *vigenereAutokey(const char *text, const char *key, bool encrypt) {
     return retval;
 }
 
-char *railfence(const char *text, int offset) {
+char *railfence(const char *text, int offset, bool encrypt) {
     size_t len = strlen(text);
     char *retval = malloc(len + 1);
     if (retval == NULL) {
         return NULL;
+    }
+
+    if (encrypt) {
+        char encRails[offset][len];
+        memset(encRails, 0, sizeof(encRails));
+        int r = 0, d = 1;
+        for (int i = 0; i < len; i++) {
+            strncat(encRails[r], text+i, 1);
+            r += d;
+            if (r == 0 || r == offset-1) d *= -1;
+        }
+        for (r = 0; r < offset; r++) {
+            strncat(retval, encRails[r], len);
+        }
+        return retval;
     }
 
     char pattern[len];
