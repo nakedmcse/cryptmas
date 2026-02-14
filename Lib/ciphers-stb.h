@@ -9,6 +9,7 @@ typedef struct columnIdx {
     char letter;
 } columnIdx;
 
+int hammingDistance(unsigned long a, unsigned long b);
 unsigned char *hexToBytes(const char *hex);
 char *atBash(const char *text);
 char *caeser(const char *text, int offset, bool encrypt);
@@ -23,6 +24,16 @@ char *affine(const char *text, int a, int b, bool encrypt);
 
 #ifdef CIPHERS_STB_IMPLEMENTATION
 const char *alpha = "abcdefghijklmnopqrstuvwxyz";
+
+int hammingDistance(unsigned long a, unsigned long b) {
+    int count = 0;
+    unsigned long diff = a ^ b;
+    for (int i = 0; i < 64; i++) {
+        count += (int)(diff & 1);
+        diff >>= 1;
+    }
+    return count;
+}
 
 unsigned char *hexToBytes(const char *hex) {
     size_t len = strlen(hex);

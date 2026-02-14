@@ -5,6 +5,15 @@
 #define CIPHERS_STB_IMPLEMENTATION
 #include "ciphers-stb.h"
 
+void test_hammingDistance(void) {
+    assert(hammingDistance(0, 1) == 1);
+    assert(hammingDistance(0, 255) == 8);
+    assert(hammingDistance(255, 0) == 8);
+    assert(hammingDistance(255, 255) == 0);
+    assert(hammingDistance(0, 65535) == 16);
+    printf("hammingDistance test passed\n");
+}
+
 void test_hexToBytes(void) {
     assert(hexToBytes("ff")[0] == 255);
     assert(hexToBytes("00")[0] == 0);
@@ -68,6 +77,7 @@ void test_affine(void) {
 }
 
 int main(void) {
+    test_hammingDistance();
     test_hexToBytes();
     test_atBash();
     test_caeser();
