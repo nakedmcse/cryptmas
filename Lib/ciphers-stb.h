@@ -10,6 +10,7 @@ typedef struct columnIdx {
 } columnIdx;
 
 int hammingDistance(unsigned long a, unsigned long b);
+unsigned char *pad(const char *original, size_t origLength, unsigned char padding, size_t totalLength);
 unsigned char *hexToBytes(const char *hex);
 char *atBash(const char *text);
 char *caeser(const char *text, int offset, bool encrypt);
@@ -33,6 +34,16 @@ int hammingDistance(unsigned long a, unsigned long b) {
         diff >>= 1;
     }
     return count;
+}
+
+unsigned char *pad(const char *original, size_t origLength, unsigned char padding, size_t totalLength) {
+    unsigned char *result = malloc(totalLength);
+    if (result == NULL) {
+        return NULL;
+    }
+    memcpy(result, original, origLength);
+    memset(result+origLength, padding, totalLength-origLength);
+    return result;
 }
 
 unsigned char *hexToBytes(const char *hex) {

@@ -14,6 +14,15 @@ void test_hammingDistance(void) {
     printf("hammingDistance test passed\n");
 }
 
+void test_pad(void) {
+    char original[4] = { 255, 255, 255, 255 };
+    unsigned char *padded = pad(original, 4, 100, 6);
+    assert(padded[3] == (unsigned char)255);
+    assert(padded[4] == (unsigned char)100);
+    assert(padded[5] == (unsigned char)100);
+    printf("pad test passed\n");
+}
+
 void test_hexToBytes(void) {
     assert(hexToBytes("ff")[0] == 255);
     assert(hexToBytes("00")[0] == 0);
@@ -78,6 +87,7 @@ void test_affine(void) {
 
 int main(void) {
     test_hammingDistance();
+    test_pad();
     test_hexToBytes();
     test_atBash();
     test_caeser();
