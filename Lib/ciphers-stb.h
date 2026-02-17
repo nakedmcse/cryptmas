@@ -11,6 +11,7 @@ typedef struct columnIdx {
 
 int hammingDistance(unsigned long a, unsigned long b);
 unsigned char *pad(const char *original, size_t origLength, unsigned char padding, size_t totalLength);
+char *bytesToHex(unsigned char *bin, size_t binLen);
 unsigned char *hexToBytes(const char *hex);
 char *atBash(const char *text);
 char *caeser(const char *text, int offset, bool encrypt);
@@ -60,6 +61,22 @@ unsigned char *hexToBytes(const char *hex) {
         bin[j] = (hex[i] % 32 + 9) % 25 * 16 + (hex[i+1] % 32 + 9) % 25;
     bin[binLen] = '\0';
     return bin;
+}
+
+char *bytesToHex(unsigned char *bin, size_t binLen) {
+    char hex[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    char *result = malloc(2*binLen+1);
+    if (result == NULL) {
+        return NULL;
+    }
+    memset(result, 0, 2*binLen+1);
+    for (size_t i=0; i<binLen; i++) {
+        unsigned char msn = bin[i] >> 4;
+        unsigned char lsn = bin[i] & 15;
+        result[2*i] = hex[msn];
+        result[2*i+1] = hex[lsn];
+    }
+    return result;
 }
 
 char *atBash(const char *text) {

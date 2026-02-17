@@ -31,6 +31,12 @@ void test_hexToBytes(void) {
     printf("hexToBytes test passed\n");
 }
 
+void test_bytesToHex(void) {
+    unsigned char original[4] = { 255, 10, 255, 0 };
+    assert(strncmp(bytesToHex(original, 4),"ff0aff00",4) == 0);
+    printf("bytesToHex test passed\n");
+}
+
 void test_atBash(void) {
     assert(strncmp(atBash("vevitivvm"),"evergreen",9) == 0);
     assert(strncmp(atBash("evergreen"),"vevitivvm",9) == 0);
@@ -88,6 +94,7 @@ void test_affine(void) {
 int main(void) {
     test_hammingDistance();
     test_pad();
+    test_bytesToHex();
     test_hexToBytes();
     test_atBash();
     test_caeser();
