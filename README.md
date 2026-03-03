@@ -20,6 +20,19 @@ to use it and simply include the single `ciphers-stb.h` file.
 
 Examples of use can be found in the `ciphers-stb-test.c` file.
 
+## Puzzles
+### Captured Transmission
+This was a two stage xor based CTF challenge.  The first part was key recovery and the second was using padding and 
+given data to recover the final plain text.
+
+Javascript and FORTRAN solutions.
+
+### Sanitised Logs
+This was an RSA private key recovery.  You were given a crash dump that you had to reconstruct which gave you
+part of the information you needed to recovery the private key using RSA private numbers.
+
+Python solution.
+
 ## 2025
 ### Day 1
 ROT13 - Special case of the caeser cipher,
