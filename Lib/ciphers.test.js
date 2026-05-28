@@ -49,6 +49,11 @@ describe("Ciphers", () => {
         expect(Ciphers.affine("pcwvxccp", 5, 8, false)).toBe("reindeer");
         expect(Ciphers.affine("reindeer", 5, 8, true)).toBe("pcwvxccp");
     })
+
+    test("Base9spam", () => {
+        expect(Ciphers.base9spam("testing", true)).toBe("sksjjfhgjgsfssdkljhk");
+        expect(Ciphers.base9spam("sksjjfhgjgsfssdkljhk", false)).toBe("testing");
+    })
 })
 
 describe("Tools", () => {

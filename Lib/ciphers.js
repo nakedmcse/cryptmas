@@ -260,5 +260,41 @@ class Ciphers {
         return text.split('')
             .map(x => Ciphers.alpha[decrypt.indexOf(x)]).join('');
     }
+
+    static base9spam(text, encrypt) {
+        const letters = 'asdfghjkl';
+        if (encrypt) {
+            const bytes = new TextEncoder().encode(text);
+
+            let number = 0n;
+            bytes.toReversed().forEach((value) => {
+                number <<= 8n;
+                number += BigInt(value);
+            });
+
+            const encoded = number
+                .toString(9)
+                .split('')
+                .map(v => letters[parseInt(v, 9)])
+                .join('');
+
+            return `sk${encoded}`;
+        }
+        let number = 0n;
+        const body = text.slice(2);
+
+        for (const ch of body) {
+            const digit = letters.indexOf(ch);
+            if (digit === -1) continue;
+            number = number * 9n + BigInt(digit);
+        }
+
+        const bytes = [];
+        while (number > 0n) {
+            bytes.push(Number(number & 0xffn));
+            number >>= 8n;
+        }
+        return String.fromCharCode(...bytes);
+    }
 }
 module.exports = Ciphers;
