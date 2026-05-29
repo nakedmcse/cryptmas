@@ -91,6 +91,11 @@ void test_affine(void) {
     printf("affine test passed\n");
 }
 
+void test_base9spam(void) {
+    assert(strncmp(base9spam("sksjjfhgjgsfssdkljhk", false), "testing", 7) == 0);
+    printf("base9spam test passed\n");
+}
+
 int main(void) {
     test_hammingDistance();
     test_pad();
@@ -105,5 +110,6 @@ int main(void) {
     test_playfair();
     test_xor();
     test_affine();
+    test_base9spam();
     return 0;
 }

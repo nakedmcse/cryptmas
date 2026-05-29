@@ -22,6 +22,7 @@ char *column(const char *text, const char *key, bool encrypt);
 char *playfair(const char *text, const char *key, bool encrypt);
 char *xor(const char *text, const char *key);
 char *affine(const char *text, int a, int b, bool encrypt);
+char *base9spam(const char *text, bool encrypt);
 #define CIPHERS_STB_H
 
 #ifdef CIPHERS_STB_IMPLEMENTATION
@@ -35,6 +36,22 @@ int hammingDistance(unsigned long a, unsigned long b) {
         diff >>= 1;
     }
     return count;
+}
+
+void ullToBase9(unsigned long long number, char *buffer) {
+    char tmp[65];
+    size_t i = 0, k = 0;
+
+    do {
+        tmp[i++] = (char)((number % 9) + '0');
+        number /= 9;
+    } while (number > 0);
+    tmp[i] = '\0';
+
+    for (long j = (long)i; j >= 0; j--) {
+        buffer[k++] = tmp[j];
+    }
+    buffer[k] = '\0';
 }
 
 unsigned char *pad(const char *original, size_t origLength, unsigned char padding, size_t totalLength) {
@@ -368,6 +385,39 @@ char *affine(const char *text, int a, int b, bool encrypt) {
     free(decrypt);
     retval[strlen(text)] = '\0';
     return retval;
-};
+}
+
+char *base9spam(const char *text, bool encrypt) {
+    const char *letters = "asdfghjkl";
+    const size_t textLen = strlen(text);
+    char *retval = malloc(textLen + 3);
+    if (retval == NULL) {
+        return NULL;
+    }
+    unsigned long long number = 0;
+
+    if (encrypt) {
+        // TODO: Implement encrypt
+        for (long i = (long)textLen; i >= 0; i--) {
+            number <<= 8;
+            number += (unsigned char)text[i];
+        }
+        // convert number to base 9 string
+        // convert digits to letters
+        return retval;
+    }
+
+    for (size_t i = 2; i < textLen; i++) {
+        long digit = strchr(letters, text[i]) - letters;
+        if (digit < 0) continue;
+        number = number * 9 + digit;
+    }
+    int j = 0;
+    while (number > 0) {
+        retval[j++] = (char)(number & 0xff);
+        number >>= 8;
+    }
+    return retval;
+}
 #endif
 #endif //CIPHERS_STB_H
