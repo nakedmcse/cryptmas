@@ -5,6 +5,13 @@
 #define CIPHERS_STB_IMPLEMENTATION
 #include "ciphers-stb.h"
 
+void test_ullToBase9(void) {
+    char buffer[65];
+    ullToBase9(10,buffer);
+    assert(strncmp(buffer,"11",2) == 0);
+    printf("ullToBase9 test passed\n");
+}
+
 void test_hammingDistance(void) {
     assert(hammingDistance(0, 1) == 1);
     assert(hammingDistance(0, 255) == 8);
@@ -93,10 +100,12 @@ void test_affine(void) {
 
 void test_base9spam(void) {
     assert(strncmp(base9spam("sksjjfhgjgsfssdkljhk", false), "testing", 7) == 0);
+    assert(strncmp(base9spam("testing", true), "sksjjfhgjgsfssdkljhk", 20) == 0);
     printf("base9spam test passed\n");
 }
 
 int main(void) {
+    test_ullToBase9();
     test_hammingDistance();
     test_pad();
     test_bytesToHex();

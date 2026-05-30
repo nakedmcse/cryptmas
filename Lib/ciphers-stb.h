@@ -46,7 +46,7 @@ void ullToBase9(unsigned long long number, char *buffer) {
         tmp[i++] = (char)((number % 9) + '0');
         number /= 9;
     } while (number > 0);
-    tmp[i] = '\0';
+    i--;
 
     for (long j = (long)i; j >= 0; j--) {
         buffer[k++] = tmp[j];
@@ -397,13 +397,17 @@ char *base9spam(const char *text, bool encrypt) {
     unsigned long long number = 0;
 
     if (encrypt) {
-        // TODO: Implement encrypt
+        char buffer[65];
         for (long i = (long)textLen; i >= 0; i--) {
             number <<= 8;
             number += (unsigned char)text[i];
         }
-        // convert number to base 9 string
-        // convert digits to letters
+        ullToBase9(number, buffer);
+        retval[0] = 's';
+        retval[1] = 'k';
+        for (int i = 2; i < strlen(buffer)+2; i++) {
+            retval[i] = letters[buffer[i-2] - '0'];
+        }
         return retval;
     }
 
