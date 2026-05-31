@@ -38,22 +38,6 @@ int hammingDistance(unsigned long a, unsigned long b) {
     return count;
 }
 
-void ullToBase9(unsigned long long number, char *buffer) {
-    char tmp[65];
-    size_t i = 0, k = 0;
-
-    do {
-        tmp[i++] = (char)((number % 9) + '0');
-        number /= 9;
-    } while (number > 0);
-    i--;
-
-    for (long j = (long)i; j >= 0; j--) {
-        buffer[k++] = tmp[j];
-    }
-    buffer[k] = '\0';
-}
-
 unsigned char *pad(const char *original, size_t origLength, unsigned char padding, size_t totalLength) {
     unsigned char *result = malloc(totalLength);
     if (result == NULL) {
@@ -390,38 +374,67 @@ char *affine(const char *text, int a, int b, bool encrypt) {
 char *base9spam(const char *text, bool encrypt) {
     const char *letters = "asdfghjkl";
     const size_t textLen = strlen(text);
-    char *retval = malloc(textLen + 3);
-    if (retval == NULL) {
-        return NULL;
-    }
-    unsigned long long number = 0;
 
     if (encrypt) {
-        char buffer[65];
-        for (long i = (long)textLen; i >= 0; i--) {
-            number <<= 8;
-            number += (unsigned char)text[i];
+        unsigned char *digits = calloc(textLen * 3 + 1, 1);  // Converting base 9 -> base 256 means roughly 3 digits per byte
+        char *out = malloc(textLen * 3 + 3);
+        if (!digits || !out) {
+            if (digits) free(digits);
+            if (out) free(out);
+            return NULL;
         }
-        ullToBase9(number, buffer);
-        retval[0] = 's';
-        retval[1] = 'k';
-        for (int i = 2; i < strlen(buffer)+2; i++) {
-            retval[i] = letters[buffer[i-2] - '0'];
+
+        size_t digitLen = 1;
+
+        // digits[] little-endian base9 number
+        for (size_t i = 0; i < textLen; i++) {
+            int carry = (unsigned char)text[textLen - 1 - i];
+
+            for (size_t j = 0; j < digitLen; j++) {
+                const int v = digits[j] * 256 + carry;
+                digits[j] = v % 9;
+                carry = v / 9;
+            }
+
+            while (carry > 0) {
+                digits[digitLen++] = carry % 9;
+                carry /= 9;
+            }
         }
-        return retval;
+
+        out[0] = 's';
+        out[1] = 'k';
+        for (size_t i = 0; i < digitLen; i++) {
+            out[2 + i] = letters[(int)digits[digitLen - 1 - i]];
+        }
+        out[2 + digitLen] = '\0';
+        free(digits);
+        return out;
     }
 
+    unsigned char *bytes = calloc(textLen + 1, 1);
+    if (!bytes) return NULL;
+    size_t byteLen = 1;
+
     for (size_t i = 2; i < textLen; i++) {
-        long digit = strchr(letters, text[i]) - letters;
-        if (digit < 0) continue;
-        number = number * 9 + digit;
+        char *p = strchr(letters, text[i]);
+        if (!p) continue;
+
+        int carry = (int)(p - letters);
+
+        for (size_t j = 0; j < byteLen; j++) {
+            const int v = (unsigned char)bytes[j] * 9 + carry;
+            bytes[j] = v & 0xff;
+            carry = v >> 8;
+        }
+
+        while (carry > 0) {
+            bytes[byteLen++] = carry & 0xff;
+            carry >>= 8;
+        }
     }
-    int j = 0;
-    while (number > 0) {
-        retval[j++] = (char)(number & 0xff);
-        number >>= 8;
-    }
-    return retval;
+
+    return (char *)bytes;
 }
 #endif
 #endif //CIPHERS_STB_H
