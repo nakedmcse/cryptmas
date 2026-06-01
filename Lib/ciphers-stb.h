@@ -423,7 +423,7 @@ char *base9spam(const char *text, bool encrypt) {
         int carry = (int)(p - letters);
 
         for (size_t j = 0; j < byteLen; j++) {
-            const int v = (unsigned char)bytes[j] * 9 + carry;
+            const int v = bytes[j] * 9 + carry;
             bytes[j] = v & 0xff;
             carry = v >> 8;
         }
